@@ -22,7 +22,7 @@
 
 Cleaner code, for beginners.
 
-Originally a fork from https://github.com/ryanmcdermott/clean-code-javascript, this project aims to help JavaScript beginners grasping the concept easier with practical tips that they can use in their every-day, cleaner code.
+💡 Originally a fork from https://github.com/ryanmcdermott/clean-code-javascript, this project aims to help JavaScript beginners grasping the concept easier with practical tips that they can use in their every-day, cleaner code. Contributions are highly appreciated.
 
 Software engineering principles, from Robert C. Martin's book
 [_Clean Code_](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882),
@@ -49,7 +49,7 @@ improvement. Beat up the code instead!
 
 ## **Variables**
 
-### Use meaningful and pronounceable variable names
+### 1. Use meaningful and pronounceable variable names
 
 **Bad:**
 
@@ -65,8 +65,9 @@ const currentDate = moment().format("YYYY/MM/DD");
 
 **[⬆ back to top](#table-of-contents)**
 
-### Use the same vocabulary for the same type of variable
+### 2. Use the same vocabulary for the same type of variable
 
+getUserInfo / getClientData / getCustomerRecord are just different names for the same action `getUser`'s information. Unless you really have different types (then you should name them different conceptually) or a solid reason to separate them, use the same vocab for the same concept.
 **Bad:**
 
 ```javascript
@@ -83,7 +84,7 @@ getUser();
 
 **[⬆ back to top](#table-of-contents)**
 
-### Use searchable names
+### 3. Use searchable names
 
 We will read more code than we will ever write. It's important that the code we
 do write is readable and searchable. By _not_ naming variables that end up
@@ -111,7 +112,11 @@ setTimeout(blastOff, MILLISECONDS_PER_DAY);
 
 **[⬆ back to top](#table-of-contents)**
 
-### Use explanatory variables
+### 4. Use explanatory variables
+
+A [match](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match) retrieves the result of matching a string against a regular expression and return an array result. Here we don't use the /g flag so it returns an array containing: the first complete match and its two related capturing groups (`(.+?)` for city name and `(\d{5})` for the 5-digit code).
+The first complete match at resultArray[0] is not used.
+In the good example, noticing that for unused variable we use a lodash `_` as a common noting convention for unused var and clearly define the results we want to use.
 
 **Bad:**
 
@@ -173,7 +178,8 @@ locations.forEach((location) => {
 ### Don't add unneeded context
 
 If your class/object name tells you something, don't repeat that in your
-variable name.
+variable name. Here we have a Car object, it's redundant to add `car` into carMake, carModel...
+Imagine when you name it this way, you are using the noun 'car' two times with `car.carColor` instead of `car.color`.
 
 **Bad:**
 
@@ -185,7 +191,7 @@ const Car = {
 };
 
 function paintCar(car, color) {
-    car.carColor = color;
+    car.carColor = color; //a redundant car.car appears
 }
 ```
 
@@ -199,7 +205,7 @@ const Car = {
 };
 
 function paintCar(car, color) {
-    car.color = color;
+    car.color = color; //a car and we accessing its color
 }
 ```
 
@@ -211,6 +217,9 @@ Default arguments are often cleaner than short circuiting. Be aware that if you
 use them, your function will only provide default values for `undefined`
 arguments. Other "falsy" values such as `''`, `""`, `false`, `null`, `0`, and
 `NaN`, will not be replaced by a default value.
+
+If you are sure that only `null` or `undefined` are the only unwanted values, and `0` or `''` are still usable.
+[Nullish coalescing operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator) can help.
 
 **Bad:**
 
@@ -225,6 +234,13 @@ function createMicrobrewery(name) {
 
 ```javascript
 function createMicrobrewery(name = "Hipster Brew Co.") {
+    // ...
+}
+```
+
+```javascript
+function createMicrobrewery(name) {
+    const breweryName = name ?? "Hipster Brew Co."; // if an empty '' name is still acceptable
     // ...
 }
 ```
